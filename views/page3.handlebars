@@ -17,7 +17,7 @@
   <a href="/page1">Page 1</a>
   <a href="/page2">Page 2</a>
 
-  <form action="/" method="POST">
+  <form action="/createDog" method="POST">
     <label for="name">Name:</label>
     <input type="text" name="name" value="">
 
@@ -34,18 +34,8 @@
   <br />
 
   <form action="" method="GET">
-    <label for="name">Name to search for:</label>
+    <label for="name">Name of the dog:</label>
     <input type="text" name="name" value="">
-
-    <input type="submit" value="Submit">
-  </form>
-
-  <br />
-  <br />
-
-  <form action="" method="GET">
-    <label for="name">Name of dog:</label>
-    <input type="text" name="name" value={{dogName}}>
 
     <input type="submit" value="Increase Age">
 </body>
