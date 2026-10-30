@@ -185,6 +185,7 @@ const setName = async (req, res) => {
   }
 };
 
+// function to create a new dog in the db
 const createDog = async (req, res) => {
   if (!req.body.name || !req.body.breed || !req.body.age) {
     // If they are missing data, send back an error.
@@ -193,15 +194,18 @@ const createDog = async (req, res) => {
     });
   }
 
+  // fill in dog data
   const dogData = {
     name: req.body.name,
     breed: req.body.breed,
     age: req.body.age,
   };
 
+  // creaete new dog model
   const newDog = new Dog(dogData);
 
   try {
+    // save to db and return 201
     await newDog.save();
     return res.status(201).json({
       name: newDog.name,
@@ -209,6 +213,7 @@ const createDog = async (req, res) => {
       age: newDog.age,
     });
   } catch (e) {
+    // something bad happened, 500
     console.log(e);
     res.status(500).json({
       error: 'failed to create dog',
@@ -308,7 +313,42 @@ const updateLast = (req, res) => {
 };
 
 const updateAgeByName = (req, res) => {
+  if (!req.body.name) {
+    // If they are missing data, send back an error.
+    return res.status(400).json({ 
+      error: 'Name is missing',
+    });
+  }
 
+  // increment the age of the dog by 1
+  const updatePromise = Dog.findOneAndUpdate(
+    {
+      name: req.body.name,
+    },
+    {
+      $inc: {
+        'age': 1,
+      },
+    },
+    {
+      returnDocument: 'after',
+    }
+  ).lean().exec();
+
+  // returned updated data
+  updatePromise.then((doc) => res.json({
+    name: doc.name,
+    breed: doc.breed,
+    age: doc.age,
+  }));
+
+  // something bad happened
+  updatePromise.catch((err) => {
+    console.log(err);
+    return res.status(500).json({ 
+      error: 'Something went wrong' 
+    });
+  });
 };
 
 // A function to send back the 404 page.
