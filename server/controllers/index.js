@@ -100,6 +100,20 @@ const hostPage3 = (req, res) => {
   res.render('page3');
 };
 
+const hostPage4 = async (req, res) => {
+  try {
+    const docs = await Dog.find({}).lean().exec();
+    return res.render('page4', {
+      dogs: docs,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ 
+      error: 'failed to find dogs' 
+    });
+  }
+};
+
 // Get name will return the name of the last added cat.
 const getName = async (req, res) => {
   try {
@@ -336,11 +350,20 @@ const updateAgeByName = (req, res) => {
   ).lean().exec();
 
   // returned updated data
-  updatePromise.then((doc) => res.json({
-    name: doc.name,
-    breed: doc.breed,
-    age: doc.age,
-  }));
+  updatePromise.then((doc) => {
+    // if the name given dne
+    if (!doc) {
+      return res.status(404).json({
+        error: 'Dog not found',
+      });
+    }
+    
+    return res.json({
+      name: doc.name,
+      breed: doc.breed,
+      age: doc.age,
+    });
+  });
 
   // something bad happened
   updatePromise.catch((err) => {
@@ -364,6 +387,7 @@ module.exports = {
   page1: hostPage1,
   page2: hostPage2,
   page3: hostPage3,
+  page4: hostPage4,
   getName,
   setName,
   createDog,
