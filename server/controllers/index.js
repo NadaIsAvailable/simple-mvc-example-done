@@ -102,7 +102,10 @@ const hostPage3 = (req, res) => {
 
 const hostPage4 = async (req, res) => {
   try {
+    // get all dogs
     const docs = await Dog.find({}).lean().exec();
+
+    // render the page
     return res.render('page4', {
       dogs: docs,
     });

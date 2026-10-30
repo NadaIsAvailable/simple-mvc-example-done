@@ -3,10 +3,6 @@ const mongoose = require('mongoose');
 let DogModel;
 
 const DogSchema = new mongoose.Schema({
-    // name (string)
-    // breed (string)
-    // age (number)
-    // createdDate (Date)
     name: {
         type: String,
         required: true,
